@@ -112,19 +112,28 @@
         .link:hover {
             color: #00346b;
         }
+
+        .map-extra-info {
+            color: #888;
+        }
     </style>
 </head>
 
 <body>
     <h2>Idle Kingdom Clicker Governors</h2>
-    <div>For v0.10.4.x | created by <font color="#206cbe">@firf#4674</font></div>
+    <div>
+        For v0.10.4.x | aggregated by <font color="#206cbe">@firf#4674</font>
+    </div>
     <h4>Filters:</h4>
     <div id="filters"></div>
     <h4>Governor's Traits: (<div id="trait-count"></div>)</h4>
     <div id="traits" class="flex-container"></div>
     <h4>Best Combs:</h4>
     <div id="combs"></div>
-    <h4>Map Info:</h4>
+    <h4>Merge Costs:</h4>
+    <div id="merge-costs"></div>
+    <h4>Map Info: <span style="font-weight: normal;">created by <font color="#206cbe">@jealoa#5192</font></span>
+    </h4>
     <div id="mapinfo"></div>
     <script>
         let data = [
@@ -348,7 +357,10 @@
                 "village": 1,
                 "level": 4,
                 "location": "mid-bottom",
-                "map": "./img/map_1.png",
+                "map": [
+                    "./img/map_1.png 997KB",
+                    "./img/map_1.gif 869KB"
+                ],
                 "tiles": {
                     "Water": ["83", "6"],
                     "Mountain": ["79", "10"],
@@ -364,25 +376,25 @@
                 "village": 1,
                 "level": 14,
                 "location": "mid-bottom",
-                "map": "./img/map_2.png"
+                "map": ["./img/map_2.png 1186KB"]
             },
             {
                 "village": 1,
                 "level": 22,
                 "location": "top",
-                "map": "./img/map_3.png"
+                "map": ["./img/map_3.png 1259KB"]
             },
             {
                 "village": 2,
                 "level": 28,
                 "location": "left, right",
-                "map": "./img/map_4.png"
+                "map": ["./img/map_4.png 1616KB"]
             },
             {
                 "village": 2,
                 "level": 31,
                 "location": "top, bottom",
-                "map": "./img/map_5.png"
+                "map": ["./img/map_5.png 1515KB"]
             }
         ];
         const bestComb = [
@@ -438,10 +450,26 @@
             for (var i = 0; i < mapInfo.length; i++) {
                 var d = mapInfo[i];
                 var h = "<div class='cell'>{html}</div>";
+                var mapLinks = [];
+                var maps = d["map"];
+                for (var j = 0; j < maps.length; j++) {
+                    var s1 = maps[j].split(" ");
+                    var format = s1[0].split(".")[2];
+                    switch (format) {
+                        case "png":
+                            format = "Static";
+                            break;
+                        case "gif":
+                            format = "Animated";
+                            break;
+                    }
+                    var otherInfo = s1[1];
+                    mapLinks.push("<a href='" + s1[0] + "' target='_blank'>" + format + "(" + otherInfo + ")</a>");
+                }
                 var text = "<div class='title'>Map " + (i + 1) + "</div>"
                     + "<div class='content'>"
-                    + "Village: " + d["village"] + " (" + (d["location"]) + ")"
-                    + "<br><a href='" + d["map"] + "' target='_blank'>View Map</a>" + "</div>";
+                    + "Village: " + d["village"] + " <span class='map-extra-info'>(" + (d["location"]) + ")</span>"
+                    + "<br>View Map: " + mapLinks.join(", ") + "</div>";
                 result += h.replace("{html}", text);
             }
             document.querySelector("#mapinfo").innerHTML = result;
