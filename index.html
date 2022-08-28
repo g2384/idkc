@@ -116,13 +116,23 @@
         .map-extra-info {
             color: #888;
         }
+
+        .alpha-tag {
+            border-radius: 5px;
+            display: inline-block;
+            font-weight: normal;
+            padding: 0px 5px;
+            margin-left: 10px;
+            border: 1px solid #333;
+            margin-bottom: 2px;
+        }
     </style>
 </head>
 
 <body>
     <h2>Idle Kingdom Clicker Governors</h2>
     <div>
-        For v0.11.x | aggregated by <font color="#206cbe">@firf#4674</font>
+        For v0.11.x & 0.12.x (alpha) | aggregated by <font color="#206cbe">@firf#4674</font>
     </div>
     <h4>Filters:</h4>
     <div id="filters"></div>
@@ -341,6 +351,13 @@
                 "class": "scholars",
                 "base-value": [1.40, 2.60],
                 "items": ["library"]
+            },
+            {
+                "name": "connoisseur",
+                "class": "cultivators",
+                "base-value": [2.10, 3.90],
+                "items": ["spice farm", "salt mine"],
+                "pre-release": true
             }];
         data.sort((a, b) => (a["class"] + a["name"]).localeCompare(b["class"] + b["name"]));
         const itemClasses = {
@@ -377,7 +394,7 @@
                 "map": [
                     "./img/map_2.png 1186KB",
                     "./img/map_2.gif 1952KB"
-                 ]
+                ]
             },
             {
                 "village": 1,
@@ -386,7 +403,7 @@
                 "map": [
                     "./img/map_3.png 1259KB",
                     "./img/map_3.gif 989KB"
-                    ]
+                ]
             },
             {
                 "village": 2,
@@ -399,6 +416,13 @@
                 "level": 31,
                 "location": "top, bottom",
                 "map": ["./img/map_5.png 1533KB"]
+            },
+            {
+                "village": 2,
+                "level": 31,
+                "location": "left, right",
+                "pre-release": true, // in alpha
+                "map": ["./img/map_6.png 1376KB"]
             }
         ];
         const bestComb = [
@@ -418,6 +442,7 @@
                 "traits": ["Outcast Hovel"]
             }
         ]
+        const alphaTagElement = "<div class='alpha-tag'>alpha</div>";
 
         function toggle(name) {
             var div = document.querySelector("#" + name);
@@ -470,7 +495,8 @@
                     var otherInfo = s1[1];
                     mapLinks.push("<a href='" + s1[0] + "' target='_blank'>" + format + "(" + otherInfo + ")</a>");
                 }
-                var text = "<div class='title'>Map " + (i + 1) + "</div>"
+                var isPreRelease = d["pre-release"];
+                var text = "<div class='title'>Map " + (i + 1) + (isPreRelease == true ? alphaTagElement : "") + "</div>"
                     + "<div class='content'>"
                     + "Village: " + d["village"] + " <span class='map-extra-info'>(" + (d["location"]) + ")</span>"
                     + "<br>View Map: " + mapLinks.join(", ") + "</div>";
@@ -528,8 +554,10 @@
                     previousClass = itemCls;
                 }
                 var h = "<div class='cell " + cls + "'>{html}</div>";
+                var isPreRelease = d["pre-release"];
                 var text = "<div class='title'>"
-                    + name.toUpperCase() + "</div>" + "<div class='class'>"
+                    + name.toUpperCase() + (isPreRelease == true ? alphaTagElement : "") + "</div>"
+                    + "<div class='class'>"
                     + cls.toUpperCase() + "</div>" + "<div class='content'>"
                     + itemsTexts.join(", ") + "</div>"
                     + "<div class='base-value'>"
