@@ -156,7 +156,7 @@
                 "class": "scholars",
                 "base-value": [1.10, 1.80],
                 "items": ["shaman", "paper mill", "outcast hovel", "squid fisher",
-                    "whaling port", "volcano outpost"]
+                    "mangrove farm", "volcano outpost"]
             },
             {
                 "name": "tradesman",
@@ -182,7 +182,7 @@
                 "name": "scribe",
                 "class": "scholars",
                 "base-value": [2.10, 3.90],
-                "items": ["squid fisher", "whaling port", "dye works"]
+                "items": ["squid fisher", "mangrove farm", "dye works"]
             },
             {
                 "name": "sage",
@@ -194,19 +194,19 @@
                 "name": "pioneer",
                 "class": "scholars",
                 "base-value": [2.10, 3.90],
-                "items": ["outcast hovel", "volcano outpost", "whaling port"]
+                "items": ["outcast hovel", "volcano outpost", "mangrove farm"]
             },
             {
                 "name": "sea dog",
                 "class": "all classes",
                 "base-value": [2.10, 3.90],
-                "items": ["fisherman", "squid fisher", "whaling port"]
+                "items": ["fisherman", "squid fisher", "mangrove farm"]
             },
             {
                 "name": "extractor",
                 "class": "all classes",
                 "base-value": [1.10, 1.60],
-                "items": ["foraging hut", "hunter", "farm", "herbalist hut", "fisherman", "spice farm", "salt mine", "woodcutter", "clay pit", "quarry", "forester lodge", "coal mine", "iron mine", "shaman", "paper mill", "outcast hovel", "squid fisher", "whaling port", "volcano outpost"]
+                "items": ["foraging hut", "hunter", "farm", "herbalist hut", "fisherman", "spice farm", "salt mine", "woodcutter", "clay pit", "quarry", "forester lodge", "coal mine", "iron mine", "shaman", "paper mill", "outcast hovel", "squid fisher", "mangrove farm", "volcano outpost"]
             },
             {
                 "name": "overseer",
@@ -357,6 +357,13 @@
                 "class": "cultivators",
                 "base-value": [2.10, 3.90],
                 "items": ["spice farm", "salt mine"],
+                "pre-release": true
+            },
+            {
+                "name": "chemist",
+                "class": "scholars",
+                "base-value": [2.10, 3.90],
+                "items": ["laboratory"],
                 "pre-release": true
             }];
         data.sort((a, b) => (a["class"] + a["name"]).localeCompare(b["class"] + b["name"]));
