@@ -126,6 +126,48 @@
             border: 1px solid #333;
             margin-bottom: 2px;
         }
+
+        .level-1,
+        .level-2,
+        .level-4,
+        .level-8 {
+            font-weight: bold;
+            min-width: 40px;
+        }
+
+        .level-1 {
+            color: #262626;
+            background-color: rgb(192, 192, 192);
+        }
+
+        .level-2 {
+            color: rgb(13, 107, 13);
+            background-color: rgb(183, 255, 183);
+        }
+
+        .level-4 {
+            color: rgb(42, 131, 214);
+            background-color: rgb(172, 229, 255);
+        }
+
+        .level-8 {
+            color: rgb(197, 110, 29);
+            background-color: rgb(255, 201, 166);
+        }
+
+        table,
+        th,
+        td {
+            border: rgb(90, 90, 90) 1px solid;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+
+            text-align: center;
+            padding: 5px;
+        }
     </style>
 </head>
 
@@ -138,8 +180,10 @@
     <div id="filters"></div>
     <h4>Governor's Traits: (<div id="trait-count"></div>)</h4>
     <div id="traits" class="flex-container"></div>
-    <h4>Best Combs:</h4>
-    <div id="combs"></div>
+    <!--<h4>Best Combs:</h4>
+    <div id="combs"></div>-->
+    <!--<h4>Merge Costs:</h4>
+    <div id="merge-costs"></div>-->
     <h4>Map Info: <span style="font-weight: normal;">created by <font color="#206cbe">@jealoa#5192</font></span>
     </h4>
     <div id="mapinfo"></div>
@@ -370,7 +414,7 @@
         const itemClasses = {
             "cultivators": ["foraging hut", "hunter", "winery", "fisherman", "farm", "bakery", "spice farm", "salt mine", "herbalist hut", "distillery", "butcher shop", "curing shop", "tavern"],
             "crafters": ["woodcutter", "sawmill", "clay pit", "kiln", "quarry", "coal mine", "mason shop", "forester lodge", "iron mine", "carpentry", "smelter", "blacksmith", "engineering hall"],
-            "scholars": ["shaman", "paper mill", "adept shack", "squid fisher", "bookbinder", "whaling port", "volcano outpost", "outcast hovel", "apothecary", "dye works", "alchemist tower", "scriptorium", "laboratory"],
+            "scholars": ["shaman", "paper mill", "adept shack", "squid fisher", "bookbinder", "mangrove farm", "volcano outpost", "outcast hovel", "apothecary", "dye works", "alchemist tower", "scriptorium", "laboratory"],
             "transport": ["foodstore", "stockpile", "library", "bridge", "tunnel"]
         }
         const index = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"]
@@ -436,17 +480,17 @@
             {
                 "name": "level-up-cultivators",
                 "displayName": "Levelling up cultivators (governor)",
-                "traits": ["Herbalist Hut"]
+                "traits": ["Butcher Shop"]
             },
             {
                 "name": "level-up-crafters",
                 "displayName": "Levelling up crafters (governor)",
-                "traits": ["Forester Lodge"]
+                "traits": ["Carpentry"]
             },
             {
                 "name": "level-up-scholars",
                 "displayName": "Levelling up scholars (governor)",
-                "traits": ["Outcast Hovel"]
+                "traits": ["Mangrove Farm", "Volcano Outpost"]
             }
         ]
         const alphaTagElement = "<div class='alpha-tag'>alpha</div>";
@@ -473,7 +517,7 @@
             document.querySelector("#combs").innerHTML = resultAll;
         }
 
-        window.addEventListener('load', loadBestCombs, false);
+        //window.addEventListener('load', loadBestCombs, false);
 
         function titleCase(str) {
             return str.toLowerCase().split(' ').map(function (word) {
@@ -637,10 +681,60 @@
             }
             addTraits(showItems);
         }
+
+        const TraitLevels = [1, 2, 4, 8];
+        var TraitLevelCost = [];
+        function calcTraitLevelCost() {
+            var prev = 0;
+            for (var i = 0; i < TraitLevels.length; i++) {
+                var curr = (prev + 1) * 2 + prev;
+                prev = curr;
+                TraitLevelCost.push(curr);
+            }
+        }
+        calcTraitLevelCost();
+
+        function addMergeCosts() {
+            var div = document.querySelector("#merge-costs");
+            var html = "<table><tr><th></th><th></th><th colspan='" + TraitLevels.length + "'>Next Level</th></tr>{ths}{tds}</table>";
+            var ths = "<th></th><th></th>";
+            var tds = "<tr><th rowspan='" + (TraitLevels.length + 1) + "''>Current<br>Level</th></tr>";
+            for (var i = 0; i < TraitLevels.length; i++) {
+                ths += "<td class='level-" + TraitLevels[i] + "'>" + TraitLevels[i] + "</td>";
+            }
+            html = html.replace("{ths}", "<tr>" + ths + "</tr>");
+            for (var i = 0; i < TraitLevels.length; i++) {
+                tds += "<tr>";
+                tds += "<td class='level-" + TraitLevels[i] + "'>" + TraitLevels[i] + "</td>";
+                for (var j = 0; j < TraitLevels.length; j++) {
+                    tds += "<td>" + getMergeCost(j, i) + "</td>";
+                }
+                tds += "</tr>"
+            }
+            html = html.replace("{tds}", "<tr>" + tds + "</tr>");
+            div.innerHTML = html;
+        }
+
+        function getMergeCost(curr, next) {
+            var cl = TraitLevels[curr];
+            var nl = TraitLevels[next];
+            if (curr <= next) {
+                return " - ";
+            }
+            tds = [];
+            for (var i = 0; i < curr; i++) {
+                var l = TraitLevels[curr - i - 1];
+                var deduction = (curr - i) == 1 && i > 0 ? TraitLevelCost[0] : 0;
+                tds.push(TraitLevelCost[i] - deduction + "&#215;<span class='level-" + l + "'>Level " + l + "</span>");
+            }
+            return tds.join("<br>");
+        }
+
         addTraits();
         addMapInfo();
         addFilters();
         setCheckBoxes();
+        //addMergeCosts();
     </script>
 </body>
 
